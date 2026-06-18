@@ -4,14 +4,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   blogQueryKey,
   fetchBlogPosts,
-  type BlogPost,
 } from "@/lib/blog";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 type UseBlogPostsOptions = {
   enabled?: boolean;
   includeDrafts?: boolean;
-  placeholderData?: BlogPost[] | false;
 };
 
 export function useBlogPosts(options: UseBlogPostsOptions = {}) {
@@ -21,7 +19,6 @@ export function useBlogPosts(options: UseBlogPostsOptions = {}) {
     queryKey: [...blogQueryKey, includeDrafts ? "all" : "published"],
     queryFn: () => fetchBlogPosts({ includeDrafts }),
     enabled: options.enabled ?? true,
-    placeholderData: options.placeholderData === false ? undefined : options.placeholderData,
   });
 }
 

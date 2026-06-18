@@ -97,63 +97,6 @@ export const faqs = [
   },
 ];
 
-export const blogPosts = [
-  {
-    slug: "buy-car-kenya-safely",
-    title: "How to Buy a Car in Kenya Safely",
-    category: "Buying Guide",
-    excerpt: "Essential steps and checks to make a confident purchase.",
-    date: "2026-06-01",
-    image:
-      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    slug: "best-cars-import-kenya",
-    title: "Best Cars to Import to Kenya",
-    category: "Imports",
-    excerpt: "Top reliable, fuel-efficient and family-friendly options.",
-    date: "2026-05-25",
-    image:
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    slug: "local-vs-import",
-    title: "Local Purchase vs Importing: Which Is Better?",
-    category: "Insights",
-    excerpt: "A side-by-side breakdown of cost, time and quality.",
-    date: "2026-05-15",
-    image:
-      "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    slug: "car-import-duty-kenya",
-    title: "Understanding Car Import Duty in Kenya",
-    category: "Imports",
-    excerpt: "How KRA calculates duty and what to expect.",
-    date: "2026-05-05",
-    image:
-      "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    slug: "best-suvs-kenyan-roads",
-    title: "Best SUVs for Kenyan Roads",
-    category: "Reviews",
-    excerpt: "Comfortable, capable and reliable picks for any terrain.",
-    date: "2026-04-28",
-    image:
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    slug: "used-car-tips",
-    title: "Tips Before Buying a Used Car",
-    category: "Buying Guide",
-    excerpt: "Inspect, test drive and verify documents like a pro.",
-    date: "2026-04-15",
-    image:
-      "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",
-  },
-];
-
 export const categories = [
   "SUVs",
   "Sedans",

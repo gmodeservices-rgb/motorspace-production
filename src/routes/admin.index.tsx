@@ -198,7 +198,7 @@ function DashboardContent({ session }: { session: Session }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const carsQuery = useCars();
-  const blogQuery = useBlogPosts({ includeDrafts: true, placeholderData: false });
+  const blogQuery = useBlogPosts({ includeDrafts: true });
   useInventoryRealtime();
   useBlogRealtime();
 

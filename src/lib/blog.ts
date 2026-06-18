@@ -1,5 +1,4 @@
-import { blogPosts as fallbackBlogPosts } from "@/data/site";
-import { isSupabaseConfigured, requireSupabase, supabase } from "@/lib/supabase";
+import { requireSupabase } from "@/lib/supabase";
 
 type BlogRow = {
   id: string;
@@ -40,20 +39,6 @@ const blogSelect = `
   image,
   is_published
 `;
-
-function fallbackPosts(): BlogPost[] {
-  return fallbackBlogPosts.map((post, index) => ({
-    id: `fallback-${index + 1}`,
-    slug: post.slug,
-    title: post.title,
-    category: post.category,
-    excerpt: post.excerpt,
-    content: "",
-    date: post.date,
-    image: post.image,
-    isPublished: true,
-  }));
-}
 
 function rowToBlogPost(row: BlogRow): BlogPost {
   return {
@@ -103,9 +88,9 @@ function throwSupabaseError(message: string): never {
 }
 
 export async function fetchBlogPosts(options: { includeDrafts?: boolean } = {}) {
-  if (!isSupabaseConfigured || !supabase) return fallbackPosts();
+  const client = requireSupabase();
 
-  let query = supabase
+  let query = client
     .from("blog_posts")
     .select(blogSelect)
     .order("date_published", { ascending: false })
@@ -116,7 +101,6 @@ export async function fetchBlogPosts(options: { includeDrafts?: boolean } = {}) 
   const { data, error } = await query;
 
   if (error) {
-    if (!options.includeDrafts && isMissingBlogTableError(error.message)) return fallbackPosts();
     throwSupabaseError(error.message);
   }
 
