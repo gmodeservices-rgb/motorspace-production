@@ -45,17 +45,13 @@ export function CarCard({ car }: { car: Car }) {
         )}
       </Link>
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <div className="flex min-h-[4.5rem] flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-          <div className="min-w-0">
-            <h3 className="text-lg font-bold leading-tight">
-              {car.make} {car.model}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {car.year} / {car.bodyType}
-            </p>
-          </div>
-          <p className="vehicle-price shrink-0 text-left text-base font-bold sm:text-right sm:text-lg">
-            {formatPrice(car.price)}
+        <div className="flex min-h-[5.25rem] flex-col gap-1.5">
+          <h3 className="text-lg font-bold leading-tight">
+            {car.make} {car.model}
+          </h3>
+          <p className="vehicle-price text-base font-bold sm:text-lg">{formatPrice(car.price)}</p>
+          <p className="text-sm text-muted-foreground">
+            {car.year} / {car.bodyType}
           </p>
         </div>
         <div className="mt-4 grid min-h-[4.5rem] grid-cols-1 gap-2 text-xs text-muted-foreground min-[380px]:grid-cols-2">
