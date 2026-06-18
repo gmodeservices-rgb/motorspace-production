@@ -88,7 +88,7 @@ function Blog() {
                         onClick={() =>
                           setOpenPostSlug((current) => (current === post.slug ? null : post.slug))
                         }
-                        className="inline-flex items-center gap-1 font-semibold text-[var(--navy-deep)] transition hover:text-[var(--brand-accent)]"
+                        className="inline-flex items-center gap-1 font-semibold text-foreground transition hover:text-[var(--brand-accent)]"
                       >
                         {openPostSlug === post.slug ? "Show less" : "Read more"}{" "}
                         <ArrowRight className="h-4 w-4" />

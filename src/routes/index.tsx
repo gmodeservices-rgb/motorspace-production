@@ -1,14 +1,7 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Globe2,
-  Truck,
-  Search,
-  ArrowRight,
-  Star,
-  Sparkles,
-} from "lucide-react";
+import { Globe2, Truck, Search, ArrowRight, Star, Sparkles } from "lucide-react";
 import heroCar1 from "@/assets/hero-car 1.png";
 import heroCar2 from "@/assets/hero-car 2.png";
 import heroCar3 from "@/assets/hero-car 3.png";
@@ -190,12 +183,10 @@ function Index() {
       {/* FEATURED */}
       <section className="section-y container-px mx-auto max-w-7xl">
         <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
-          <SectionHeader
-            title="Featured Vehicles"
-          />
+          <SectionHeader title="Featured Vehicles" />
           <Link
             to="/cars"
-            className="hidden text-sm font-semibold text-[var(--navy-deep)] hover:text-[var(--brand-accent)] sm:inline-flex items-center gap-1"
+            className="hidden items-center gap-1 text-sm font-semibold text-foreground transition hover:text-[var(--brand-accent)] sm:inline-flex"
           >
             View all <ArrowRight className="h-4 w-4" />
           </Link>
