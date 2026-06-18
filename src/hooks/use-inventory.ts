@@ -1,26 +1,19 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { cars as fallbackCars, type Car } from "@/data/cars";
+import type { Car } from "@/data/cars";
 import { fetchCarBySlug, fetchCars, inventoryQueryKey } from "@/lib/inventory";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 type UseCarsOptions = {
   enabled?: boolean;
-  placeholderData?: Car[] | false;
 };
 
 export function useCars(options: UseCarsOptions = {}) {
-  const defaultPlaceholderData = isSupabaseConfigured ? undefined : fallbackCars;
-
   return useQuery({
     queryKey: inventoryQueryKey,
     queryFn: fetchCars,
     enabled: options.enabled ?? true,
-    placeholderData:
-      options.placeholderData === false
-        ? undefined
-        : (options.placeholderData ?? defaultPlaceholderData),
   });
 }
 

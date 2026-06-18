@@ -1,6 +1,6 @@
 ﻿import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Globe2,
   Truck,
@@ -55,7 +55,20 @@ function Index() {
   const carsQuery = useCars();
   useInventoryRealtime();
   const [heroIndex, setHeroIndex] = useState(0);
-  const featuredCars = (carsQuery.data ?? []).filter((car) => car.isFeatured).slice(0, 6);
+  const inventory = carsQuery.data ?? [];
+  const featuredCars = inventory.filter((car) => car.isFeatured).slice(0, 6);
+  const searchMakes = useMemo(
+    () => Array.from(new Set(inventory.map((car) => car.make))).sort(),
+    [inventory],
+  );
+  const searchBodies = useMemo(
+    () => Array.from(new Set(inventory.map((car) => car.bodyType))).sort(),
+    [inventory],
+  );
+  const searchFuels = useMemo(
+    () => Array.from(new Set(inventory.map((car) => car.fuelType))).sort(),
+    [inventory],
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -148,30 +161,24 @@ function Index() {
           <form action="/cars" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-7">
             <select name="make" className="form-control">
               <option>Any Make</option>
-              <option>Toyota</option>
-              <option>Mazda</option>
-              <option>Subaru</option>
-              <option>Nissan</option>
-              <option>Honda</option>
-              <option>BMW</option>
-              <option>Mercedes-Benz</option>
+              {searchMakes.map((make) => (
+                <option key={make}>{make}</option>
+              ))}
             </select>
             <input name="model" placeholder="Model" className="form-control" />
             <input name="year" placeholder="Year" className="form-control" />
             <input name="price" placeholder="Max Price (KES)" className="form-control" />
             <select name="body" className="form-control">
               <option>Any Body</option>
-              <option>SUV</option>
-              <option>Sedan</option>
-              <option>Hatchback</option>
-              <option>Pickup</option>
+              {searchBodies.map((body) => (
+                <option key={body}>{body}</option>
+              ))}
             </select>
             <select name="fuel" className="form-control">
               <option>Any Fuel</option>
-              <option>Petrol</option>
-              <option>Diesel</option>
-              <option>Hybrid</option>
-              <option>Electric</option>
+              {searchFuels.map((fuel) => (
+                <option key={fuel}>{fuel}</option>
+              ))}
             </select>
             <button className="btn-accent w-full">
               <Search className="h-4 w-4" /> Search

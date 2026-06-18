@@ -197,7 +197,7 @@ function AdminDashboard() {
 function DashboardContent({ session }: { session: Session }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const carsQuery = useCars({ placeholderData: false });
+  const carsQuery = useCars();
   const blogQuery = useBlogPosts({ includeDrafts: true, placeholderData: false });
   useInventoryRealtime();
   useBlogRealtime();
@@ -647,7 +647,7 @@ function DashboardContent({ session }: { session: Session }) {
                     value={form.slug}
                     onChange={(event) => setForm({ ...form, slug: event.target.value })}
                     className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm outline-none focus:border-[var(--brand-accent)]"
-                    placeholder="toyota-harrier-2020"
+                    placeholder="vehicle-slug"
                   />
                   <button
                     type="button"

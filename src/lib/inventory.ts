@@ -1,5 +1,5 @@
-import { cars as fallbackCars, type Car } from "@/data/cars";
-import { isSupabaseConfigured, requireSupabase, supabase } from "@/lib/supabase";
+import type { Car } from "@/data/cars";
+import { requireSupabase } from "@/lib/supabase";
 
 type CarRow = {
   id: string;
@@ -117,9 +117,9 @@ function throwSupabaseError(message: string): never {
 }
 
 export async function fetchCars(): Promise<Car[]> {
-  if (!isSupabaseConfigured || !supabase) return fallbackCars;
+  const client = requireSupabase();
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("cars")
     .select(carSelect)
     .order("date_added", { ascending: false })
@@ -131,11 +131,9 @@ export async function fetchCars(): Promise<Car[]> {
 }
 
 export async function fetchCarBySlug(slug: string): Promise<Car | undefined> {
-  if (!isSupabaseConfigured || !supabase) {
-    return fallbackCars.find((car) => car.slug === slug);
-  }
+  const client = requireSupabase();
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("cars")
     .select(carSelect)
     .eq("slug", slug)
