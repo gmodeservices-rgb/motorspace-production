@@ -9,15 +9,8 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import locationIcon from "@/assets/location.png";
 import { useCarBySlug, useCars, useInventoryRealtime } from "@/hooks/use-inventory";
 import { fetchCarBySlug } from "@/lib/inventory";
-import { site } from "@/data/site";
-import {
-  CarFront,
-  ChevronLeft,
-  ChevronRight,
-  MessageCircle,
-  Phone,
-  Share2,
-} from "lucide-react";
+import { getWhatsAppUrl, site } from "@/data/site";
+import { CarFront, ChevronLeft, ChevronRight, MessageCircle, Phone, Share2 } from "lucide-react";
 
 type InquiryIntent = "General inquiry" | "Book viewing" | "Request financing";
 
@@ -80,7 +73,6 @@ function CarDetail() {
   const hasMultipleImages = car.images.length > 1;
   const vehicleTitle = `${car.year} ${car.make} ${car.model}`;
   const subtitle = `${car.bodyType} / ${car.location} / ${car.condition}`;
-  const [inquiryIntent, setInquiryIntent] = useState<InquiryIntent>("General inquiry");
   const specifications: Specification[] = [
     { label: "Make", value: car.make },
     { label: "Model", value: car.model },
@@ -150,19 +142,6 @@ function CarDetail() {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
   };
-  const handleInquiryAction = (intent: InquiryIntent) => {
-    setInquiryIntent(intent);
-    window.setTimeout(() => {
-      const inquiryFormId = window.matchMedia("(min-width: 1024px)").matches
-        ? "vehicle-inquiry-desktop"
-        : "vehicle-inquiry-mobile";
-
-      document.getElementById(inquiryFormId)?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 0);
-  };
   const handleShare = () => {
     navigator.share?.({ title: vehicleTitle, url: location.href }).catch(() => {});
   };
@@ -206,8 +185,6 @@ function CarDetail() {
 
             <VehicleSummaryCard
               car={car}
-              onBookViewing={() => handleInquiryAction("Book viewing")}
-              onRequestFinancing={() => handleInquiryAction("Request financing")}
               onShare={handleShare}
               subtitle={subtitle}
               vehicleTitle={vehicleTitle}
@@ -220,11 +197,7 @@ function CarDetail() {
         <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(400px,0.75fr)] lg:gap-8">
           <SpecificationsGrid specifications={specifications} />
           <div className="hidden lg:block">
-            <InquiryForm
-              carName={vehicleTitle}
-              id="vehicle-inquiry-desktop"
-              intent={inquiryIntent}
-            />
+            <InquiryForm carName={vehicleTitle} id="vehicle-inquiry-desktop" />
           </div>
         </div>
       </section>
@@ -232,18 +205,14 @@ function CarDetail() {
       <section className="section-y-sm container-px mx-auto w-full max-w-7xl">
         <div className="min-w-0 space-y-8">
           <div className="rounded-xl border border-border bg-card p-5 shadow-sm sm:p-7">
-          <SectionHeader title="Description" />
+            <SectionHeader title="Description" />
             <p className="mt-6 text-sm leading-7 text-foreground/75 sm:text-base">
               {car.description}
             </p>
           </div>
 
           <div className="lg:hidden">
-            <InquiryForm
-              carName={vehicleTitle}
-              id="vehicle-inquiry-mobile"
-              intent={inquiryIntent}
-            />
+            <InquiryForm carName={vehicleTitle} id="vehicle-inquiry-mobile" />
           </div>
         </div>
       </section>
@@ -252,10 +221,10 @@ function CarDetail() {
         <section className="section-y-sm bg-[var(--soft-grey)]">
           <div className="container-px mx-auto w-full max-w-7xl">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <SectionHeader
-          title="You may also like"
-          description="Other vehicles with a close match in body style, budget, or specification."
-        />
+              <SectionHeader
+                title="You may also like"
+                description="Other vehicles with a close match in body style, budget, or specification."
+              />
               <Link
                 to="/cars"
                 className="inline-flex text-sm font-semibold text-[var(--brand-accent)] transition hover:text-[var(--brand-accent-strong)]"
@@ -371,19 +340,19 @@ function VehicleGallery({
 
 function VehicleSummaryCard({
   car,
-  onBookViewing,
-  onRequestFinancing,
   onShare,
   subtitle,
   vehicleTitle,
 }: {
   car: Car;
-  onBookViewing: () => void;
-  onRequestFinancing: () => void;
   onShare: () => void;
   subtitle: string;
   vehicleTitle: string;
 }) {
+  const generalWhatsAppUrl = getWhatsAppUrl(getInquiryMessage(vehicleTitle, "General inquiry"));
+  const bookingWhatsAppUrl = getWhatsAppUrl(getInquiryMessage(vehicleTitle, "Book viewing"));
+  const financingWhatsAppUrl = getWhatsAppUrl(getInquiryMessage(vehicleTitle, "Request financing"));
+
   return (
     <aside className="vehicle-summary-card flex min-w-0 flex-col rounded-xl border border-border/80 bg-card/95 p-5 shadow-[0_24px_70px_oklch(0.15_0.035_252_/_0.12)] backdrop-blur lg:ml-auto lg:w-full lg:max-w-[40rem] lg:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -416,30 +385,32 @@ function VehicleSummaryCard({
           <Phone className="h-4 w-4" />
         </a>
         <a
-          href={site.whatsappHref}
+          href={generalWhatsAppUrl}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="WhatsApp dealer"
+          aria-label={`WhatsApp dealer about ${vehicleTitle}`}
           className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-background shadow-sm transition hover:scale-105 sm:h-10 sm:w-10"
         >
           <WhatsAppIcon className="h-7 w-7 rounded-full" />
         </a>
-        <button
-          type="button"
-          onClick={onBookViewing}
+        <a
+          href={bookingWhatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex min-h-9 min-w-0 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-[var(--brand-accent)] px-2 text-[0.68rem] font-semibold text-white shadow-sm transition hover:bg-[var(--brand-accent-strong)] sm:flex-none sm:px-3 sm:text-xs"
         >
           <span className="sm:hidden">Book</span>
           <span className="hidden sm:inline">Book Viewing</span>
-        </button>
-        <button
-          type="button"
-          onClick={onRequestFinancing}
+        </a>
+        <a
+          href={financingWhatsAppUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex min-h-9 min-w-0 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full border border-[var(--brand-accent)] bg-card px-2 text-[0.68rem] font-semibold text-[var(--brand-accent)] shadow-sm transition hover:bg-[var(--brand-accent)] hover:text-white sm:flex-none sm:px-3 sm:text-xs"
         >
           <span className="sm:hidden">Finance</span>
           <span className="hidden sm:inline">Request Financing</span>
-        </button>
+        </a>
         <button
           type="button"
           onClick={onShare}
@@ -563,27 +534,36 @@ function SectionHeader({
   );
 }
 
-function InquiryForm({
-  carName,
-  id = "vehicle-inquiry",
-  intent,
-}: {
-  carName: string;
-  id?: string;
-  intent: InquiryIntent;
-}) {
+function InquiryForm({ carName, id = "vehicle-inquiry" }: { carName: string; id?: string }) {
   const [sent, setSent] = useState(false);
-  const [message, setMessage] = useState(() => getInquiryMessage(carName, intent));
+  const [message, setMessage] = useState(() => getInquiryMessage(carName, "General inquiry"));
 
   useEffect(() => {
-    setMessage(getInquiryMessage(carName, intent));
-  }, [carName, intent]);
+    setMessage(getInquiryMessage(carName, "General inquiry"));
+  }, [carName]);
 
   return (
     <form
       id={id}
       onSubmit={(e) => {
         e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const fullName = String(formData.get("fullName") ?? "").trim();
+        const phone = String(formData.get("phone") ?? "").trim();
+        const email = String(formData.get("email") ?? "").trim();
+        const preferredContact = String(formData.get("preferredContact") ?? "").trim();
+        const details = [
+          message,
+          "",
+          fullName ? `Name: ${fullName}` : "",
+          phone ? `Phone: ${phone}` : "",
+          email ? `Email: ${email}` : "",
+          preferredContact ? `Preferred contact: ${preferredContact}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n");
+
+        window.open(getWhatsAppUrl(details), "_blank", "noopener,noreferrer");
         setSent(true);
       }}
       className="scroll-mt-28 h-fit min-w-0 rounded-xl border border-border bg-card p-5 shadow-sm lg:sticky lg:top-28 lg:p-6"
@@ -600,15 +580,27 @@ function InquiryForm({
 
       {sent ? (
         <p className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800">
-          Thank you for your inquiry. We have received your request and our team will contact you
-          shortly with the next steps.
+          Your WhatsApp message has been prepared. Please send it in WhatsApp to complete the
+          inquiry.
         </p>
       ) : (
         <div className="mt-6 space-y-3">
-          <input required placeholder="Full name" className="form-control" />
-          <input required type="tel" placeholder="Phone number" className="form-control" />
-          <input required type="email" placeholder="Email address" className="form-control" />
-          <select className="form-control" defaultValue="WhatsApp">
+          <input name="fullName" required placeholder="Full name" className="form-control" />
+          <input
+            name="phone"
+            required
+            type="tel"
+            placeholder="Phone number"
+            className="form-control"
+          />
+          <input
+            name="email"
+            required
+            type="email"
+            placeholder="Email address"
+            className="form-control"
+          />
+          <select name="preferredContact" className="form-control" defaultValue="WhatsApp">
             <option>WhatsApp</option>
             <option>Call</option>
             <option>Email</option>
