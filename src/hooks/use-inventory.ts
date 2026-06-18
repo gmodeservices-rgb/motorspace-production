@@ -11,12 +11,16 @@ type UseCarsOptions = {
 };
 
 export function useCars(options: UseCarsOptions = {}) {
+  const defaultPlaceholderData = isSupabaseConfigured ? undefined : fallbackCars;
+
   return useQuery({
     queryKey: inventoryQueryKey,
     queryFn: fetchCars,
     enabled: options.enabled ?? true,
     placeholderData:
-      options.placeholderData === false ? undefined : (options.placeholderData ?? fallbackCars),
+      options.placeholderData === false
+        ? undefined
+        : (options.placeholderData ?? defaultPlaceholderData),
   });
 }
 
